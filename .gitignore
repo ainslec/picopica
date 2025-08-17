@@ -1,0 +1,24 @@
+# Maven target directory
+/target/
+/bak/
+
+# Maven build output logs
+*.log
+
+# Eclipse / IntelliJ / NetBeans project files
+.settings/
+nbproject/
+.idea/
+.classpath
+.project
+*.iml
+*.ipr
+*.iws
+
+# OS-specific junk
+.DS_Store
+Thumbs.db
+
+# Backup / temp files
+*~
+*.swp

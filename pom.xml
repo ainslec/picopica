@@ -1,0 +1,200 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.ainslec</groupId>
+  <artifactId>picopica</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>picopica</name>
+  <url>https://github.com/ainslec/picopica</url>
+  <description>Create source files with embedded directives so you can automatically generate different versions of the file by including or excluding certain sections. Lightweight and dependency-less Java 17+ library.</description>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://github.com/ainslec/picopica</url>
+    <connection>scm:git:https://github.com/ainslec/picopica.git</connection>
+    <developerConnection>scm:git:git@github.com:ainslec/picopica.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>ainslec</id>
+      <name>Chris Ainsley</name>
+      <email>c.b.ainsley@gmail.com</email>
+      <roles>
+        <role>creator</role>
+      </roles>
+    </developer>
+  </developers>
+  <inceptionYear>2025</inceptionYear>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!-- Prefer 'release' over separate source/target -->
+    <maven.compiler.release>17</maven.compiler.release>
+
+    <!-- Reproducible builds: fix timestamps in produced archives -->
+    <project.build.outputTimestamp>${maven.build.timestamp}</project.build.outputTimestamp>
+
+    <!-- Centralize versions -->
+    <junit.jupiter.version>5.13.4</junit.jupiter.version>
+    <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+    <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+    <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
+    <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
+    <maven.javadoc.plugin.version>3.11.2</maven.javadoc.plugin.version>
+    <maven.gpg.plugin.version>3.2.4</maven.gpg.plugin.version>
+    <nexus.staging.plugin.version>1.6.13</nexus.staging.plugin.version>
+  </properties>
+
+  <dependencies>
+    <!-- JUnit 5 (Jupiter) -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Enforce Java & Maven versions -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <goals><goal>enforce</goal></goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[17,)</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>[3.9,)</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Java 17 compilation via 'release' -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
+        <configuration>
+          <release>${maven.compiler.release}</release>
+          <parameters>true</parameters>
+        </configuration>
+      </plugin>
+
+      <!-- Run JUnit 5 tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.plugin.version}</version>
+      </plugin>
+
+      <!-- Reproducible jar + stable Automatic-Module-Name -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven.jar.plugin.version}</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Automatic-Module-Name>org.ainslec.picopica</Automatic-Module-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <!-- Attach -sources jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>${maven.source.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals><goal>jar-no-fork</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Attach -javadoc jar; silence doclint if needed -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${maven.javadoc.plugin.version}</version>
+        <configuration>
+          <doclint>none</doclint>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals><goal>jar</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Sign on verify (only when you actually deploy) -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>${maven.gpg.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals><goal>sign</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- OSSRH staging (adjust URL: many projects use s01) -->
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>${nexus.staging.plugin.version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <!-- If your account is on the newer host, switch to https://s01.oss.sonatype.org/ -->
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- Optional if you publish to Maven Central (OSSRH) -->
+  <!--
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+  -->
+</project>
