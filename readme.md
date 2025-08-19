@@ -6,7 +6,7 @@ PicoPica is a pico-sized **source code preprocessor** that lets you keep multipl
 
 It works with Java, but also any language that supports `/* ... */` block comments.
 
-* Size: 32 KB
+* Size: 36 KB
 * Modern: Requires Java 17+
 * Preserves formatting: Byte-for-byte for non-directive code
 * Safe: Handles nested directives, string literals, and comment quirks

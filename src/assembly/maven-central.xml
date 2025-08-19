@@ -12,15 +12,12 @@
       <directory>${project.build.directory}</directory>
       <includes>
         <include>*.jar</include>
-        <include>*.jar.asc</include>
-        <include>*.jar.md5</include>
-        <include>*.jar.sha1</include>
         <include>*.pom</include>
-        <include>*.pom.asc</include>
-        <include>*.pom.md5</include>
-        <include>*.pom.sha1</include>
+        <include>*.asc</include>
+        <include>*.md5</include>
+        <include>*.sha1</include>
       </includes>
-      <outputDirectory>/${project.groupId}/${project.artifactId}/${project.version}</outputDirectory>
+      <outputDirectory>/org/ainslec/picopica/${project.version}</outputDirectory>
     </fileSet>
   </fileSets>
 </assembly>
