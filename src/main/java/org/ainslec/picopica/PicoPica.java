@@ -114,25 +114,80 @@ import java.util.Set;
  * <p>
  * All non-directive text is preserved verbatim. Newlines are preserved.
  * </p>
+ * <p>
+ * Provides convenience methods to configure and execute conditional
+ * compilation directly on source strings. Most usage flows through
+ * {@link #input(String, String...)} for fluent configuration, but
+ * {@link #exec(String, String...)} is available for quick, one-off
+ * preprocessing.
+ * </p>
  */
 public class PicoPica {
 	
 	
-	// Key for the default license (if no keys provided)
+	 /**
+     * Reserved key name for the default license mapping.
+     * <p>
+     * Cannot be used as a user-specified active key. Represents the
+     * absence of other keys when performing license lookups.
+     * </p>
+     */
     public static final String DEFAULT_RESERVED = "DEFAULT";
+    
+    
     public static final String DEFAULT_LICENSE_KEY = DEFAULT_RESERVED;
     
     private static final class EmptyAllOutput extends RuntimeException {
         private static final long serialVersionUID = 1L;
     }
     
-	/**
-     * Start a fluent PicoPica run with an input string.
+
+    /**
+     * Creates a new {@link Api} builder instance with the given
+     * source text and optional active keys.
+     * <p>
+     * This is the primary entry point for configuring preprocessing.
+     * You may further chain methods on the returned {@link Api} to set
+     * resource URLs, license maps, language modes, and other options
+     * before calling {@link Api#exec()}.
+     * </p>
+     *
+     * <h3>Example:</h3>
+     * <pre>{@code
+     * String output = PicoPica.input(src, "FOO").exec();
+     * }</pre>
+     *
+     * @param src  the source text to preprocess
+     * @param keys optional active keys to control conditional inclusion/exclusion
+     * @return a new {@link Api} builder instance
      */
     public static Api input(String src, String ... keys) {
         return new Api().load(src, keys);
     }
     
+    /**
+     * Quickly runs the preprocessor on the given source text using
+     * the specified active keys.
+     * <p>
+     * This is a shorthand for:
+     * <pre>{@code
+     * PicoPica.input(src, keys).exec();
+     * }</pre>
+     * Use this when no additional configuration (e.g. license mapping,
+     * resource URLs) is needed. Keys are optional comma seperated strings in the above example.
+     * </p>
+     *
+     * <h3>Example:</h3>
+     * <pre>{@code
+     * String stableOnly = PicoPica.exec(input, "RELEASE");
+     * }</pre>
+     *
+     * @param src  the source text to preprocess
+     * @param keys optional active keys to control conditional inclusion/exclusion
+     * @return the preprocessed source text with directives applied
+     * @throws IllegalStateException if the input is missing or invalid
+     * @throws IllegalArgumentException if invalid keys are provided (e.g. {@code DEFAULT})
+     */
     public static String exec(String src, String ... keys) {
         return new Api().load(src, keys).exec();
     }

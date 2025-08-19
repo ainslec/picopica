@@ -57,8 +57,7 @@ public class Lexer {
             int c = cursor.peekChar(0);
             if (c == -1) {
                 flushTextToken(cursor, buf, out);
-                out.add(new Token(cursor.getLineNumberBase1(), cursor.getColumnNumberBase1(),
-                        -1, -1, "", TOKEN_EOF, cursor.getLexicalState()));
+                out.add(new Token(cursor.getLineNumberBase1(), cursor.getColumnNumberBase1(), -1, -1, "", TOKEN_EOF, cursor.getLexicalState()));
                 break;
             }
             switch (state) {
