@@ -7,7 +7,7 @@ import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DetailedTestsJava {
+public class DetailedJavaTests {
 
     private static final String JAVADOC_SNIPPET = "/**\n" +
 	" * pre\n" +

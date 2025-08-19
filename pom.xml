@@ -172,29 +172,46 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>${nexus.staging.plugin.version}</version>
+        <version>1.6.13</version>
         <extensions>true</extensions>
         <configuration>
           <serverId>ossrh</serverId>
-          <!-- If your account is on the newer host, switch to https://s01.oss.sonatype.org/ -->
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>false</autoReleaseAfterClose>
         </configuration>
+      </plugin>
+
+      <!-- If wish to manually upload to maven central:: mvn clean package assembly:single -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+          <descriptors>
+            <descriptor>src/assembly/maven-central.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-central-zip</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
 
-  <!-- Optional if you publish to Maven Central (OSSRH) -->
-  <!--
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
-  -->
+<distributionManagement>
+  <repository>
+    <id>ossrh</id>
+    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+  </repository>
+  <snapshotRepository>
+    <id>ossrh</id>
+    <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+  </snapshotRepository>
+</distributionManagement>
 </project>
