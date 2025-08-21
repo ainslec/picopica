@@ -10,7 +10,11 @@
 
   <name>picopica</name>
   <url>https://github.com/ainslec/picopica</url>
-  <description>Create source files with embedded directives so you can automatically generate different versions of the file by including or excluding certain sections. Lightweight and dependency-less Java 17+ library.</description>
+  <description>
+    Create source files with embedded directives so you can automatically generate
+    different versions of the file by including or excluding certain sections.
+    Lightweight and dependency-less Java 17+ library.
+  </description>
 
   <licenses>
     <license>
@@ -42,13 +46,13 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- Prefer 'release' over separate source/target -->
+    <!-- Prefer 'release' over source/target -->
     <maven.compiler.release>17</maven.compiler.release>
 
-    <!-- Reproducible builds: fix timestamps in produced archives -->
+    <!-- Reproducible builds -->
     <project.build.outputTimestamp>${maven.build.timestamp}</project.build.outputTimestamp>
 
-    <!-- Centralize versions -->
+    <!-- Plugin versions -->
     <junit.jupiter.version>5.13.4</junit.jupiter.version>
     <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
     <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
@@ -56,7 +60,7 @@
     <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
     <maven.javadoc.plugin.version>3.11.2</maven.javadoc.plugin.version>
     <maven.gpg.plugin.version>3.2.4</maven.gpg.plugin.version>
-    <nexus.staging.plugin.version>1.6.13</nexus.staging.plugin.version>
+    <central.publishing.plugin.version>0.4.0</central.publishing.plugin.version>
   </properties>
 
   <dependencies>
@@ -95,7 +99,7 @@
         </executions>
       </plugin>
 
-      <!-- Java 17 compilation via 'release' -->
+      <!-- Compile Java 17 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -106,14 +110,14 @@
         </configuration>
       </plugin>
 
-      <!-- Run JUnit 5 tests -->
+      <!-- JUnit 5 tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven.surefire.plugin.version}</version>
       </plugin>
 
-      <!-- Reproducible jar + stable Automatic-Module-Name -->
+      <!-- JAR manifest + reproducibility -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -127,7 +131,7 @@
         </configuration>
       </plugin>
 
-      <!-- Attach -sources jar -->
+      <!-- Attach sources jar -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -142,7 +146,7 @@
         </executions>
       </plugin>
 
-      <!-- Attach -javadoc jar; silence doclint if needed -->
+      <!-- Attach javadoc jar -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -160,7 +164,7 @@
         </executions>
       </plugin>
 
-      <!-- Sign on verify (only when you actually deploy) -->
+      <!-- GPG signing -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -176,74 +180,17 @@
         </executions>
       </plugin>
 
-      <!-- OSSRH staging (adjust URL: many projects use s01) -->
+      <!-- New Sonatype Central publishing -->
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.13</version>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>${central.publishing.plugin.version}</version>
         <extensions>true</extensions>
         <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-          <autoReleaseAfterClose>false</autoReleaseAfterClose>
-        </configuration>
-      </plugin>
-
-
-      <!-- If wish to manually upload to maven central:: mvn clean package assembly:single -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.6.0</version>
-        <configuration>
-          <descriptors>
-            <descriptor>src/assembly/maven-central.xml</descriptor>
-          </descriptors>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-central-zip</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>net.nicoulaj.maven.plugins</groupId>
-        <artifactId>checksum-maven-plugin</artifactId>
-        <version>1.11</version>
-        <executions>
-          <execution>
-            <id>generate-checksums</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>artifacts</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <algorithms>
-            <algorithm>MD5</algorithm>
-            <algorithm>SHA-1</algorithm>
-          </algorithms>
-          <attachChecksums>true</attachChecksums>
-          <failOnError>true</failOnError>
+          <publishingServerId>central</publishingServerId>
+          <autoRelease>true</autoRelease>
         </configuration>
       </plugin>
     </plugins>
   </build>
-
-  <distributionManagement>
-    <repository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>

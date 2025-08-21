@@ -17,6 +17,11 @@
         <include>*.md5</include>
         <include>*.sha1</include>
       </includes>
+
+      <excludes>
+        <exclude>*.zip</exclude> <!-- prevent accidental nesting -->
+        <exclude>*.zip.*</exclude> <!-- prevent accidental nesting -->
+      </excludes>
       <outputDirectory>/org/ainslec/picopica/${project.version}</outputDirectory>
     </fileSet>
   </fileSets>
