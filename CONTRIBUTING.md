@@ -59,8 +59,7 @@ git commit -s -m "Add support for XYZ feature"
 
 * [ ] My code builds successfully with `mvn clean verify`.
 * [ ] I have added/updated tests for my changes.
-* [ ] I have read and agreed to the [CAA](CAA.md).
-* [ ] I have signed the CLA via the GitHub bot (first-time contributors only).
+* [ ] I have read and agree to the terms of the [Contributor Assignment Agreement](CAA.md).
 
 ---
 

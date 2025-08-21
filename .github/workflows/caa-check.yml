@@ -1,0 +1,20 @@
+# .github/workflows/caa-check.yml
+name: CAA Agreement Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-caa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR description for agreement
+        run: |
+          AGREED=$(jq -r .pull_request.body "$GITHUB_EVENT_PATH" | grep -c "I agree to the CAA")
+          if [ "$AGREED" -eq 0 ]; then
+            echo "❌ Contributor must include 'I agree to the CAA' in PR description."
+            exit 1
+          else
+            echo "✅ Contributor accepted CAA."
+          fi
