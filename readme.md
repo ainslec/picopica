@@ -27,6 +27,12 @@ PicoPica is released under the Apache License, Version 2.0. See the `LICENSE` fi
 
 Source code is available at: https://github.com/ainslec/picopica
 
+## Contributor Assignment Agreement (CAA)
+
+All contributions to this project require acceptance of the [Contributor Assignment Agreement](CAA.md).
+
+By submitting a pull request, you agree to the terms of the CAA.
+
 ## 📊 How It Compares
 
 | Feature / Tool                         | **PicoPica**                                               | preprocess (Node.js)                          | GPP (Generic Preprocessor) | Java Preprocessor (JPP)           | Custom Script (sed/awk/Python) |
